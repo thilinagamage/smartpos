@@ -1,5 +1,3 @@
-mkdir -p .github/workflows
-cat > .github/workflows/deploy.yml << 'ENDOFFILE'
 name: Build and Deploy SmartPOS
 
 on:
@@ -45,23 +43,23 @@ jobs:
       - name: Create .env for testing
         run: |
           cat > .env << 'EOF'
-APP_NAME=SmartPOS
-APP_ENV=testing
-APP_KEY=
-APP_DEBUG=true
-APP_URL=http://localhost
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=smartpos_test
-DB_USERNAME=smartpos
-DB_PASSWORD=secret
-SESSION_DRIVER=array
-QUEUE_CONNECTION=sync
-CACHE_STORE=array
-FILESYSTEM_DISK=local
-MAIL_MAILER=log
-EOF
+          APP_NAME=SmartPOS
+          APP_ENV=testing
+          APP_KEY=
+          APP_DEBUG=true
+          APP_URL=http://localhost
+          DB_CONNECTION=pgsql
+          DB_HOST=127.0.0.1
+          DB_PORT=5432
+          DB_DATABASE=smartpos_test
+          DB_USERNAME=smartpos
+          DB_PASSWORD=secret
+          SESSION_DRIVER=array
+          QUEUE_CONNECTION=sync
+          CACHE_STORE=array
+          FILESYSTEM_DISK=local
+          MAIL_MAILER=log
+          EOF
 
       - name: Verify .env
         run: cat .env
@@ -125,4 +123,3 @@ EOF
             docker compose up -d --remove-orphans
             docker image prune -f
             echo 'Deployment complete'
-ENDOFFILE
