@@ -18,7 +18,8 @@ jobs:
           POSTGRES_DB: smartpos_test
           POSTGRES_USER: smartpos
           POSTGRES_PASSWORD: secret
-        ports: ['5432:5432']
+        ports:
+          - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-retries 5
 
 
@@ -48,10 +49,12 @@ jobs:
       - name: Copy .env for testing
         run: |
           cp .env.example .env
+          sed -i 's/DB_CONNECTION=pgsql/DB_CONNECTION=pgsql/' .env
           sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' .env
+          sed -i 's/DB_PORT=5432/DB_PORT=5432/' .env
           sed -i 's/DB_DATABASE=smartpos/DB_DATABASE=smartpos_test/' .env
           sed -i 's/DB_USERNAME=root/DB_USERNAME=smartpos/' .env
-          sed -i "s/DB_PASSWORD=/DB_PASSWORD=secret/" .env
+          sed -i 's/DB_PASSWORD=/DB_PASSWORD=secret/' .env
 
 
       - name: Generate app key
