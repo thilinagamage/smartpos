@@ -1,0 +1,9 @@
+---
+- name: Configure SmartPOS server
+  hosts: smartpos
+  become: true
+  roles:
+    - docker
+    - nginx
+    - monitoring
+    - app

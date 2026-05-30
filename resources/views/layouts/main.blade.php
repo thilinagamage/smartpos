@@ -555,12 +555,17 @@
         });
         
         $(document).ready(function() {
-            $('.datatable').DataTable({
-                ordering: true,
-                paging: true,
-                info: true,
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                responsive: true
+            $('.datatable').each(function() {
+                if ($(this).find('tbody tr').length > 0) {
+                    $(this).DataTable({
+                        ordering: true,
+                        paging: true,
+                        info: true,
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        responsive: true,
+                        destroy: true
+                    });
+                }
             });
         });
     </script>

@@ -1,0 +1,36 @@
+---
+- name: Install Docker dependencies
+  apt:
+    name: [apt-transport-https, ca-certificates, curl, gnupg, lsb-release]
+    update_cache: yes
+
+
+- name: Add Docker GPG key
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker.gpg --yes
+  args:
+    creates: /usr/share/keyrings/docker.gpg
+
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable"
+
+
+- name: Install Docker Engine
+  apt:
+    name: [docker-ce, docker-ce-cli, containerd.io, docker-compose-plugin]
+    update_cache: yes
+
+
+- name: Add ubuntu user to docker group
+  user:
+    name: ubuntu
+    groups: docker
+    append: yes
+
+
+- name: Enable and start Docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started

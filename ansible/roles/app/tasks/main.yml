@@ -1,0 +1,54 @@
+---
+- name: Create app directory
+  file:
+    path: /opt/smartpos
+    state: directory
+    owner: ubuntu
+
+
+- name: Set up Laravel scheduler cron
+  cron:
+    name: 'Laravel scheduler'
+    minute: '*'
+    job: 'cd /opt/smartpos && docker compose exec -T app php artisan schedule:run >> /dev/null 2>&1'
+    user: ubuntu
+
+
+- name: Install CloudWatch agent
+  shell: |
+    wget -q https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+    sudo dpkg -i amazon-cloudwatch-agent.deb
+    rm amazon-cloudwatch-agent.deb
+  args:
+    creates: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent
+
+- name: Configure CloudWatch agent
+  copy:
+    dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+    content: |
+      {
+        "logs": {
+          "logs_collected": {
+            "files": {
+              "collect_list": [
+                {
+                  "file_path": "/var/lib/docker/containers/**/*-json.log",
+                  "log_group_name": "/smartpos/app",
+                  "log_stream_name": "{instance_id}",
+                  "auto_removal": true
+                }
+              ]
+            }
+          }
+        }
+      }
+
+- name: Start CloudWatch agent
+  shell: |
+    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+      -a fetch-config \
+      -m ec2 \
+      -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+      -s
+  args:
+    creates: /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log

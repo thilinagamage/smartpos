@@ -1,0 +1,46 @@
+---
+- name: Create monitoring directory
+  file:
+    path: /opt/monitoring
+    state: directory
+
+
+- name: Deploy Prometheus config
+  copy:
+    dest: /opt/monitoring/prometheus.yml
+    content: |
+      global:
+        scrape_interval: 15s
+      scrape_configs:
+        - job_name: smartpos
+          static_configs:
+            - targets: ['host.docker.internal:8000']
+          metrics_path: /metrics
+
+
+- name: Deploy monitoring docker-compose
+  copy:
+    dest: /opt/monitoring/docker-compose.yml
+    content: |
+      version: '3.8'
+      services:
+        prometheus:
+          image: prom/prometheus:latest
+          volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+          ports:
+            - '127.0.0.1:9090:9090'
+          restart: unless-stopped
+        grafana:
+          image: grafana/grafana:latest
+          environment:
+            - GF_SECURITY_ADMIN_PASSWORD=changeme123
+          ports:
+            - '127.0.0.1:3000:3000'
+          restart: unless-stopped
+
+
+- name: Start monitoring stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/monitoring
+    state: present

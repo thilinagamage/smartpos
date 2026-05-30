@@ -1,0 +1,25 @@
+{
+    "Location": "https://route53.amazonaws.com/2013-04-01/hostedzone/Z0962947FXFKI1DB0NJS",
+    "HostedZone": {
+        "Id": "/hostedzone/Z0962947FXFKI1DB0NJS",
+        "Name": "sahasralabs.click.",
+        "CallerReference": "1780137532",
+        "Config": {
+            "PrivateZone": false
+        },
+        "ResourceRecordSetCount": 2
+    },
+    "ChangeInfo": {
+        "Id": "/change/C05720472RS1JOIGZR11S",
+        "Status": "PENDING",
+        "SubmittedAt": "2026-05-30T10:38:55.654000+00:00"
+    },
+    "DelegationSet": {
+        "NameServers": [
+            "ns-1317.awsdns-36.org",
+            "ns-1994.awsdns-57.co.uk",
+            "ns-791.awsdns-34.net",
+            "ns-439.awsdns-54.com"
+        ]
+    }
+}
