@@ -1,0 +1,49 @@
+services:
+  app:
+    image: ghcr.io/thilinagamage/smartpos:latest
+    restart: unless-stopped
+    ports:
+      - '8000:80'
+    environment:
+      APP_ENV: production
+      APP_DEBUG: 'false'
+      LOG_CHANNEL: stderr
+      QUEUE_CONNECTION: database
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      FILESYSTEM_DISK: s3
+      DB_CONNECTION: pgsql
+      AWS_DEFAULT_REGION: ap-southeast-1
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-southeast-1
+        awslogs-group: /smartpos/app
+        awslogs-stream: app
+        awslogs-create-group: 'true'
+
+  worker:
+    image: ghcr.io/thilinagamage/smartpos:latest
+    restart: unless-stopped
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    environment:
+      APP_ENV: production
+      APP_DEBUG: 'false'
+      LOG_CHANNEL: stderr
+      QUEUE_CONNECTION: database
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      FILESYSTEM_DISK: s3
+      DB_CONNECTION: pgsql
+      AWS_DEFAULT_REGION: ap-southeast-1
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-southeast-1
+        awslogs-group: /smartpos/worker
+        awslogs-stream: worker
+        awslogs-create-group: 'true'
