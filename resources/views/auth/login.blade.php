@@ -25,7 +25,7 @@
         margin-bottom: 2rem;
     }
     .login-logo i {
-        font-size: 3rem;
+        font-size: 4rem;
         color: #4f46e5;
     }
     @media (max-width: 575.98px) {
