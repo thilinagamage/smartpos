@@ -1,0 +1,20 @@
+services:
+  app:
+    image: ghcr.io/${GITHUB_USERNAME}/smartpos:latest
+    restart: unless-stopped
+    ports: ["80:80"]
+    env_file: .env
+    volumes:
+      - storage_data:/var/www/storage/app
+    depends_on: [worker]
+
+  worker:
+    image: ghcr.io/${GITHUB_USERNAME}/smartpos:latest
+    restart: unless-stopped
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    env_file: .env
+    volumes:
+      - storage_data:/var/www/storage/app
+
+volumes:
+  storage_data:   # persists across container restarts

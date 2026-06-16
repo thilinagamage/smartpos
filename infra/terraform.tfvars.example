@@ -1,0 +1,8 @@
+aws_region        = "ap-southeast-1"
+project           = "smartpos"
+environment       = "production"
+key_name          = "smartpos-key"
+instance_type     = "t3.small"
+db_username       = "smartpos_user"
+db_password       = "CHANGE_ME_USE_STRONG_PASSWORD"
+db_instance_class = "db.t3.micro"
