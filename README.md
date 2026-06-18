@@ -25,7 +25,7 @@ A web-based Point of Sale system built with Laravel 12, deployed to AWS using Te
 - [Features](#features)
 - [AWS Well-Architected alignment](#aws-well-architected-alignment)
 - [Project structure](#project-structure)
-- [License](#license)
+
 
 ## Overview
 
@@ -239,6 +239,5 @@ smartpos/
 ```
 
 
-## License
 
-This project is available for portfolio and educational purposes.
+Author: Thilina Gamage
