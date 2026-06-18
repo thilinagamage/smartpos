@@ -25,7 +25,6 @@ A web-based Point of Sale system built with Laravel 12, deployed to AWS using Te
 - [Features](#features)
 - [AWS Well-Architected alignment](#aws-well-architected-alignment)
 - [Project structure](#project-structure)
-- [Lessons learned / challenges solved](#lessons-learned--challenges-solved)
 - [License](#license)
 
 ## Overview
@@ -239,18 +238,6 @@ smartpos/
 └── infra/                      Terraform infrastructure (see above)
 ```
 
-## Lessons learned / challenges solved
-
-A few real production issues encountered and resolved during this deployment, kept here as a record of hands-on debugging rather than a clean-room tutorial:
-
-- **Ubuntu AMI lookup failing in `ap-southeast-1`** — the AMI name filter needed the region-specific `hvm-ssd-gp3`/`noble` naming pattern rather than the generic version-number pattern.
-- **`docker compose` not recognized after install** — Ubuntu's `docker.io` package doesn't reliably ship the Compose plugin; switched to installing `docker-ce` directly from Docker's official APT repository.
-- **`docker.service` failing with a socket activation error** — a broken handshake between `docker.socket` and `docker.service` left over from the package swap; resolved by resetting both systemd units and reloading.
-- **`docker compose` still not found despite the plugin being installed** — a second, broken `docker-compose` binary at a higher-priority plugin path was shadowing the working one; removing the stray file fixed CLI plugin discovery.
-- **GitHub push rejected for a 628 MB file** — `infra/.terraform/` provider binaries had been committed by mistake; added a proper `.gitignore` and rewrote git history to remove the large file entirely.
-- **GitHub Actions workflow YAML syntax error** — flow-style `{ }` mappings broke when a GitHub Actions expression wrapped across a line break; converted to standard block-style YAML.
-- **CI `test` job failing with "Connection refused" on PostgreSQL** — the `postgres` service container wasn't publishing its port to the runner host; added an explicit `ports: ["5432:5432"]` mapping.
-- **HTTP 419 "Page Expired" on login** — `.env` was being injected as environment variables via `env_file` but Laravel's `artisan key:generate` needs to read/write an actual `.env` file on disk; fixed by bind-mounting `.env` into the container instead of relying on `env_file` alone.
 
 ## License
 
